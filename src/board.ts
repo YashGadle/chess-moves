@@ -1,11 +1,13 @@
 import { Piece } from "./piece";
+import { allBishopMoves } from "./possible-moves/bishop";
+import coordinatesToNotations from "./utils/coordinates-to-notations";
 
 export type State = Array<Array<Cell>>;
 
 export class Board {
   state: State; // 2d array of Cells
-  numRow = 8;
-  numCol = 8;
+  static numRow = 8;
+  static numCol = 8;
 
   constructor() {
     this.state = [
@@ -93,8 +95,8 @@ export class Board {
   }
 
   renderBoard() {
-    for (var i = 0; i < this.numRow; i++) {
-      for (var j = 0; j < this.numCol; j++) {
+    for (var i = 0; i < Board.numRow; i++) {
+      for (var j = 0; j < Board.numCol; j++) {
         const board = document.getElementById("board");
         if (!board) break;
 
@@ -106,14 +108,14 @@ export class Board {
     }
   }
 
-  onClick() {
-    console.log(this);
+  onClick(this: Cell) {
+    console.log(coordinatesToNotations(allBishopMoves(this.piece, board)));
   }
 }
 
 export class Cell {
   piece: Piece | null;
-  color; // the cell color. (different than pice color)
+  color; // the cell color. (different than piece color)
 
   constructor(piece: Piece | null, color: "w" | "b") {
     this.piece = piece;
@@ -141,5 +143,7 @@ export class Cell {
 }
 
 export function setupChessBoard() {
-  new Board().renderBoard();
+  board.renderBoard();
 }
+
+export const board = new Board();

@@ -21,7 +21,7 @@ export class Piece {
   type;
   position;
   lost;
-  promotion: Promotion;
+  promotion: Promotion; // probably not needed
 
   constructor(
     type: PieceType,
@@ -29,7 +29,7 @@ export class Piece {
     position: Position,
     lost: boolean
   ) {
-    this.color = color; // black or white
+    this.color = color; // black pieces or white pieces
     this.type = type; // bishop, knight, rook etc...
     this.position = position; // coordinate [0, 1]
     this.lost = lost; // is the piece captured
