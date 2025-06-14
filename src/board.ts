@@ -1,6 +1,12 @@
 import { Piece } from "./piece";
-import { allBishopMoves } from "./possible-moves/bishop";
+
 import coordinatesToNotations from "./utils/coordinates-to-notations";
+
+import { allBishopMoves } from "./legal-moves/bishop";
+import { allKnightMoves } from "./legal-moves/knight";
+import { allRookMoves } from "./legal-moves/rook";
+import { allQueenMoves } from "./legal-moves/queen";
+import { allPawnMoves } from "./legal-moves/pawn";
 
 export type State = Array<Array<Cell>>;
 
@@ -109,7 +115,25 @@ export class Board {
   }
 
   onClick(this: Cell) {
-    console.log(coordinatesToNotations(allBishopMoves(this.piece, board)));
+    switch (this.piece?.type) {
+      case "p":
+        console.log(coordinatesToNotations(allPawnMoves(this.piece, board)));
+        break;
+      case "q":
+        console.log(coordinatesToNotations(allQueenMoves(this.piece, board)));
+        break;
+      case "n":
+        console.log(coordinatesToNotations(allKnightMoves(this.piece, board)));
+        break;
+      case "r":
+        console.log(coordinatesToNotations(allRookMoves(this.piece, board)));
+        break;
+      case "b":
+        console.log(coordinatesToNotations(allBishopMoves(this.piece, board)));
+        break;
+      default:
+        console.log("Piece type not implemented or not recognized.");
+    }
   }
 }
 

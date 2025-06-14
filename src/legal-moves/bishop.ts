@@ -7,13 +7,12 @@ export function allBishopMoves(
   board: Board
 ): Array<[number, number]> {
   if (!piece) return [];
-  if (piece.type !== "b") throw new Error("wrong piece type!");
 
   if (isPinned(piece)) {
     return [];
   }
 
-  let moves: Array<[number, number]> = [];
+  const moves: Array<[number, number]> = [];
   const state = board.state;
   const [m, n] = piece.position;
 
@@ -26,32 +25,40 @@ export function allBishopMoves(
     if (state[i][j].piece === null) {
       moves.push([i, j]);
     } else if (state[i][j].piece !== null) {
-      if (state[i][j].piece?.color !== piece.color) moves.push([i, j]);
-      else break;
+      if (state[i][j].piece?.color !== piece.color) {
+        moves.push([i, j]);
+        break;
+      } else break;
     }
   }
   for (var i = m - 1, j = n - 1; i >= 0 && j >= 0; i--, j--) {
     if (state[i][j].piece === null) {
       moves.push([i, j]);
     } else if (state[i][j].piece !== null) {
-      if (state[i][j].piece?.color !== piece.color) moves.push([i, j]);
-      else break;
+      if (state[i][j].piece?.color !== piece.color) {
+        moves.push([i, j]);
+        break;
+      } else break;
     }
   }
   for (var i = m + 1, j = n - 1; i < Board.numRow && j >= 0; i++, j--) {
     if (state[i][j].piece === null) {
       moves.push([i, j]);
     } else if (state[i][j].piece !== null) {
-      if (state[i][j].piece?.color !== piece.color) moves.push([i, j]);
-      else break;
+      if (state[i][j].piece?.color !== piece.color) {
+        moves.push([i, j]);
+        break;
+      } else break;
     }
   }
   for (var i = m - 1, j = n + 1; i >= 0 && j < Board.numCol; i--, j++) {
     if (state[i][j].piece === null) {
       moves.push([i, j]);
     } else if (state[i][j].piece !== null) {
-      if (state[i][j].piece?.color !== piece.color) moves.push([i, j]);
-      else break;
+      if (state[i][j].piece?.color !== piece.color) {
+        moves.push([i, j]);
+        break;
+      } else break;
     }
   }
 
@@ -60,7 +67,6 @@ export function allBishopMoves(
 
 function isPinned(piece: Piece) {
   //TODO
-  if (piece.type !== "b") throw new Error("wrong piece type!");
 
   return false;
 }

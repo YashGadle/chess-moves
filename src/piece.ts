@@ -82,4 +82,17 @@ export class Piece {
     pieceNode.height = 60;
     return pieceNode;
   }
+
+  promotePawn(newType: Promotion) {
+    // TODO full implementation of pawn promotion
+    
+    if (this.type !== "p") {
+      throw new Error("Only pawns can be promoted");
+    }
+    if (!newType || !["r", "n", "b", "q"].includes(newType)) {
+      throw new Error("Invalid promotion type");
+    }
+    this.type = newType;
+    this.promotion = newType;
+  }
 }
