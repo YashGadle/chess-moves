@@ -19,7 +19,7 @@ export function allKingMoves(piece: Piece, board: Board): [number, number][] {
   const state = board.getBaordState();
 
   kingMoves.forEach(([x, y]) => {
-    if (x < 0 && x >= Board.numRow && y < 0 && y >= Board.numCol) return;
+    if (x < 0 || x >= Board.numRow || y < 0 || y >= Board.numCol) return;
     const targetCell = state[x][y];
     if (targetCell.piece === null || targetCell.piece.color !== piece.color) {
       moves.push([x, y]);
@@ -29,14 +29,8 @@ export function allKingMoves(piece: Piece, board: Board): [number, number][] {
   return filterOutPinnedMoves(piece, board, moves);
 }
 
-export function isInCheck(
-  color: "w" | "b",
-  board: Board,
-  kingPosition?: [number, number]
-): boolean {
-  const [kingX, kingY] = kingPosition
-    ? kingPosition
-    : getKingPosition(board, color);
+export function isInCheck(color: "w" | "b", board: Board): boolean {
+  const [kingX, kingY] = getKingPosition(board, color);
   const state = board.getBaordState();
   const opponentColor = state[kingX][kingY].piece?.color === "w" ? "b" : "w";
   const opponentPieces = state.flatMap((row) =>

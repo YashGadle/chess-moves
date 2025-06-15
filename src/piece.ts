@@ -17,6 +17,7 @@ import { allQueenMoves } from "./legal-moves/queen";
 import { allRookMoves } from "./legal-moves/rook";
 import { allBishopMoves } from "./legal-moves/bishop";
 import { allKnightMoves } from "./legal-moves/knight";
+import { allKingMoves } from "./legal-moves/king";
 
 export type PieceColor = "w" | "b";
 export type PieceType = "p" | "r" | "b" | "n" | "q" | "k";
@@ -103,6 +104,9 @@ export class Piece {
       case "b":
         const legalBishopMoves = allBishopMoves(this, board, checkForPin);
         return legalBishopMoves;
+      case "k":
+        const legalKingMoves = allKingMoves(this, board);
+        return legalKingMoves;
       default:
         console.log("Piece type not implemented or not recognized.");
         return [];
