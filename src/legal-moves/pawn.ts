@@ -27,8 +27,9 @@ export function allPawnMoves(
   ];
   const pawnMoves = pawn.color === "w" ? whitePawnMoves : blackPawnMoves;
 
-  pawnMoves.forEach(([x, y, capture]) => {
-    if (x < 0 || x >= Board.numRow || y < 0 || y >= Board.numCol) return;
+  for (let i = 0; i < pawnMoves.length; i++) {
+    const [x, y, capture] = pawnMoves[i];
+    if (x < 0 || x >= Board.numRow || y < 0 || y >= Board.numCol) break;
     const targetCell = state[x][y];
 
     // Normal move
@@ -41,8 +42,8 @@ export function allPawnMoves(
     ) {
       // Capture move
       moves.push([x, y]);
-    }
-  });
+    } else break;;
+  }
 
   if (checkForPin) {
     return filterOutPinnedMoves(pawn, board, moves);
