@@ -1,21 +1,18 @@
-import { Piece } from "./piece";
-
+import { Piece, type Position } from "./piece";
 import coordinatesToNotations from "./utils/coordinates-to-notations";
-
-import { allBishopMoves } from "./legal-moves/bishop";
-import { allKnightMoves } from "./legal-moves/knight";
-import { allRookMoves } from "./legal-moves/rook";
-import { allQueenMoves } from "./legal-moves/queen";
-import { allPawnMoves } from "./legal-moves/pawn";
 
 export type State = Array<Array<Cell>>;
 
 export class Board {
-  state: State; // 2d array of Cells
+  private state: State; // 2d array of Cells.
   static numRow = 8;
   static numCol = 8;
 
-  constructor() {
+  constructor(state?: State) {
+    if (state) {
+      this.state = state;
+      return;
+    }
     this.state = [
       [
         new Cell(new Piece("r", "b", [0, 0]), "w"),
@@ -100,6 +97,10 @@ export class Board {
     ];
   }
 
+  getBaordState() {
+    return this.state;
+  }
+
   renderBoard() {
     for (var i = 0; i < Board.numRow; i++) {
       for (var j = 0; j < Board.numCol; j++) {
@@ -115,25 +116,33 @@ export class Board {
   }
 
   onClick(this: Cell) {
-    switch (this.piece?.type) {
-      case "p":
-        console.log(coordinatesToNotations(allPawnMoves(this.piece, board)));
-        break;
-      case "q":
-        console.log(coordinatesToNotations(allQueenMoves(this.piece, board)));
-        break;
-      case "n":
-        console.log(coordinatesToNotations(allKnightMoves(this.piece, board)));
-        break;
-      case "r":
-        console.log(coordinatesToNotations(allRookMoves(this.piece, board)));
-        break;
-      case "b":
-        console.log(coordinatesToNotations(allBishopMoves(this.piece, board)));
-        break;
-      default:
-        console.log("Piece type not implemented or not recognized.");
+    if (!this.piece) return;
+
+    console.log(coordinatesToNotations(this.piece.getLegalMoves(board, true)));
+  }
+
+  movePiece(from: Position, to: Position, piece: Piece) {
+    const [fromRow, fromCol] = from;
+    const [toRow, toCol] = to;
+
+    // Check if the move is valid
+    if (
+      fromRow < 0 ||
+      fromRow >= Board.numRow ||
+      fromCol < 0 ||
+      fromCol >= Board.numCol ||
+      toRow < 0 ||
+      toRow >= Board.numRow ||
+      toCol < 0 ||
+      toCol >= Board.numCol
+    ) {
+      console.error("Invalid move");
+      return;
     }
+
+    // Move the piece
+    this.state[toRow][toCol].piece = piece;
+    this.state[fromRow][fromCol].piece = null;
   }
 }
 

@@ -1,19 +1,14 @@
 import { Board } from "../board";
 import { Piece } from "../piece";
-import { isInCheck } from "./king";
+import filterOutPinnedMoves from "../utils/filter-out-pinned-moves";
 
 export function allRookMoves(
-  piece: Piece | null,
-  board: Board
+  piece: Piece,
+  board: Board,
+  checkForPin = false
 ): Array<[number, number]> {
-  if (!piece) return [];
-
-  if (isPinned(piece)) {
-    return [];
-  }
-
   const moves: Array<[number, number]> = [];
-  const state = board.state;
+  const state = board.getBaordState();
   const [m, n] = piece.position;
 
   // Run through all vertical and horizontal directions
@@ -66,22 +61,9 @@ export function allRookMoves(
     }
   }
 
-  // TODO: Filter out moves that would leave the king in check
-  //   moves = moves.filter(([x, y]) => {
-  //     const originalPiece = state[x][y].piece;
-  //     state[x][y].piece = piece; // Place the knight temporarily
-  //     state[piece.position[0]][piece.position[1]].piece = null; // Remove the knight from its original position
-  //     const inCheck = isInCheck(board);
-  //     state[x][y].piece = originalPiece; // Restore the original piece
-  //     state[piece.position[0]][piece.position[1]].piece = piece; // Restore the knight to its original position
-  //     return !inCheck;
-  //   });
+  if (checkForPin) {
+    return filterOutPinnedMoves(piece, board, moves);
+  }
 
   return moves;
-}
-
-function isPinned(piece: Piece) {
-  //TODO
-
-  return false;
 }

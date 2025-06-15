@@ -1,20 +1,16 @@
 import { Board } from "../board";
 import { Piece } from "../piece";
-import { isInCheck } from "./king";
+
+import filterOutPinnedMoves from "../utils/filter-out-pinned-moves";
 
 //TODO: en peasant and promotion
 export function allPawnMoves(
-  pawn: Piece | null,
-  board: Board
+  pawn: Piece,
+  board: Board,
+  checkForPin = false
 ): Array<[number, number]> {
-  if (!pawn) return [];
-
-  if (isPinned(pawn)) {
-    return [];
-  }
-
   const moves: Array<[number, number]> = [];
-  const state = board.state;
+  const state = board.getBaordState();
   const [m, n] = pawn.position;
 
   const whitePawnMoves: Array<[number, number, boolean]> = [
@@ -38,17 +34,19 @@ export function allPawnMoves(
     // Normal move
     if (targetCell.piece === null && !capture) {
       moves.push([x, y]);
-    } else if (targetCell.piece && targetCell.piece.color !== pawn.color && capture) {
+    } else if (
+      targetCell.piece &&
+      targetCell.piece.color !== pawn.color &&
+      capture
+    ) {
       // Capture move
       moves.push([x, y]);
     }
   });
 
+  if (checkForPin) {
+    return filterOutPinnedMoves(pawn, board, moves);
+  }
+
   return moves;
-}
-
-function isPinned(piece: Piece) {
-  //TODO
-
-  return false;
 }

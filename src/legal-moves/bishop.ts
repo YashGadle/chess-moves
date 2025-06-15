@@ -1,19 +1,24 @@
 import { Board } from "../board";
 import { Piece } from "../piece";
-import { isInCheck } from "./king";
 
+import filterOutPinnedMoves from "../utils/filter-out-pinned-moves";
+
+/**
+ * Finds all moves that a bishop can make on the board.
+ * @param piece 
+ * @param board 
+ * @param checkForPin If true, the function will check if the bishop is pinned and filter out moves that would leave the king in check.
+ *                    If false, it will return all possible moves without checking for pin.
+ *                    A pinned piece cannot move without putting its king in check.
+ * @returns All legal moves for the bishop.
+ */
 export function allBishopMoves(
-  piece: Piece | null,
-  board: Board
+  piece: Piece,
+  board: Board,
+  checkForPin = false
 ): Array<[number, number]> {
-  if (!piece) return [];
-
-  if (isPinned(piece)) {
-    return [];
-  }
-
   const moves: Array<[number, number]> = [];
-  const state = board.state;
+  const state = board.getBaordState();
   const [m, n] = piece.position;
 
   // Run through all 4 diagonals of the bishop
@@ -62,11 +67,9 @@ export function allBishopMoves(
     }
   }
 
+  if (checkForPin) {
+    return filterOutPinnedMoves(piece, board, moves);
+  }
+
   return moves;
-}
-
-function isPinned(piece: Piece) {
-  //TODO
-
-  return false;
 }

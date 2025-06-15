@@ -11,6 +11,13 @@ import rook_b from "./assets/rook_b.svg";
 import pawn_w from "./assets/pawn_w.svg";
 import pawn_b from "./assets/pawn_b.svg";
 
+import { Board } from "./board";
+import { allPawnMoves } from "./legal-moves/pawn";
+import { allQueenMoves } from "./legal-moves/queen";
+import { allRookMoves } from "./legal-moves/rook";
+import { allBishopMoves } from "./legal-moves/bishop";
+import { allKnightMoves } from "./legal-moves/knight";
+
 export type PieceColor = "w" | "b";
 export type PieceType = "p" | "r" | "b" | "n" | "q" | "k";
 export type Position = [number, number];
@@ -23,16 +30,13 @@ export class Piece {
   lost;
   promotion: Promotion; // probably not needed
 
-  constructor(
-    type: PieceType,
-    color: PieceColor,
-    position: Position,
-  ) {
+  constructor(type: PieceType, color: PieceColor, position: Position) {
     this.color = color; // black pieces or white pieces
     this.type = type; // bishop, knight, rook etc...
     this.position = position; // coordinate [0, 1]
     this.lost = false; // is the piece captured
     this.promotion = null; // only for pawns
+    this.getLegalMoves = this.getLegalMoves.bind(this);
   }
 
   private getPieceImageFromTypeAndColor(type: PieceType, color: PieceColor) {
@@ -82,9 +86,32 @@ export class Piece {
     return pieceNode;
   }
 
+  getLegalMoves = (board: Board, checkForPin = false): Array<Position> => {
+    switch (this.type) {
+      case "p":
+        const legalPawnMoves = allPawnMoves(this, board, checkForPin);
+        return legalPawnMoves;
+      case "q":
+        const legalQueenMoves = allQueenMoves(this, board, checkForPin);
+        return legalQueenMoves;
+      case "n":
+        const legalKnightMoves = allKnightMoves(this, board, checkForPin);
+        return legalKnightMoves;
+      case "r":
+        const legalRookMoves = allRookMoves(this, board, checkForPin);
+        return legalRookMoves;
+      case "b":
+        const legalBishopMoves = allBishopMoves(this, board, checkForPin);
+        return legalBishopMoves;
+      default:
+        console.log("Piece type not implemented or not recognized.");
+        return [];
+    }
+  };
+
   promotePawn(newType: Promotion) {
     // TODO full implementation of pawn promotion
-    
+
     if (this.type !== "p") {
       throw new Error("Only pawns can be promoted");
     }
