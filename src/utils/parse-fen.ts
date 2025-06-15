@@ -1,5 +1,5 @@
 export type parsedFEN = {
-  board: any[][];
+  board: any[][]; // (just to make TS happy - this will be a 2d array of chars.)
   activeColor: string;
   castlingRights: {
     whiteKingSide: boolean;
@@ -16,6 +16,14 @@ export type parsedFEN = {
   fullmoveNumber: number;
 };
 
+/**
+ * A util to easily paste a custom chess position in FEN format.
+ * Just use lichess.org board editor to create a position and copy the FEN string.
+ * Pass the FEN string in query params like this:
+ * `?fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`
+ * @param fen 
+ * @returns An object containing the parsed FEN data.
+ */
 export function parseFEN(fen: string) {
   const [
     piecePlacement,
