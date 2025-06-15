@@ -1,5 +1,6 @@
 import { Piece, type Position } from "./piece";
 import coordinatesToNotations from "./utils/coordinates-to-notations";
+import { parseFEN, isLowerCase, type parsedFEN } from "./utils/parse-fen";
 
 export type State = Array<Array<Cell>>;
 
@@ -8,9 +9,21 @@ export class Board {
   static numRow = 8;
   static numCol = 8;
 
-  constructor(state?: State) {
-    if (state) {
-      this.state = state;
+  constructor(parsedBoard: parsedFEN | null) {
+    if (parsedBoard) {
+      this.state = parsedBoard.board.map((row, rowIndex) =>
+        row.map((cell, colIndex) => {
+          if (cell === "") {
+            return new Cell(null, (rowIndex + colIndex) % 2 === 0 ? "w" : "b");
+          } else if (isLowerCase(cell)) {
+            const piece = new Piece(cell, "b", [rowIndex, colIndex]);
+            return new Cell(piece, (rowIndex + colIndex) % 2 === 0 ? "w" : "b");
+          } else {
+            const piece = new Piece(cell.toLowerCase(), "w", [rowIndex, colIndex]);
+            return new Cell(piece, (rowIndex + colIndex) % 2 === 0 ? "w" : "b");
+          }
+        })
+      );
       return;
     }
     this.state = [
@@ -97,7 +110,7 @@ export class Board {
     ];
   }
 
-  getBaordState() {
+  getBoardState() {
     return this.state;
   }
 
@@ -179,4 +192,9 @@ export function setupChessBoard() {
   board.renderBoard();
 }
 
-export const board = new Board();
+const params = new URLSearchParams(window.location.search);
+const fen = params.get("fen");
+
+const parsedFEN = fen ? parseFEN(fen) : null;
+
+export const board = new Board(parsedFEN);

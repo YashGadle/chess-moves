@@ -1,5 +1,5 @@
 import { Board } from "../board";
-import { Piece } from "../piece";
+import { Piece, type Position } from "../piece";
 
 import filterOutPinnedMoves from "../utils/filter-out-pinned-moves";
 
@@ -8,9 +8,9 @@ export function allPawnMoves(
   pawn: Piece,
   board: Board,
   checkForPin = false
-): Array<[number, number]> {
-  const moves: Array<[number, number]> = [];
-  const state = board.getBaordState();
+): Array<Position> {
+  const moves: Array<Position> = [];
+  const state = board.getBoardState();
   const [m, n] = pawn.position;
 
   const whitePawnMoves: Array<[number, number, boolean]> = [

@@ -8,7 +8,7 @@ export function allRookMoves(
   checkForPin = false
 ): Array<[number, number]> {
   const moves: Array<[number, number]> = [];
-  const state = board.getBaordState();
+  const state = board.getBoardState();
   const [m, n] = piece.position;
 
   // Run through all vertical and horizontal directions

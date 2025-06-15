@@ -1,10 +1,10 @@
 import { Board } from "../board";
-import { Piece } from "../piece";
+import { Piece, type Position } from "../piece";
 import filterOutPinnedMoves from "../utils/filter-out-pinned-moves";
 
-export function allKingMoves(piece: Piece, board: Board): [number, number][] {
+export function allKingMoves(piece: Piece, board: Board): Array<Position> {
   const [m, n] = piece.position;
-  const moves: [number, number][] = [];
+  const moves: Array<Position> = [];
   const kingMoves = [
     [m + 1, n], // down
     [m - 1, n], // up
@@ -16,7 +16,7 @@ export function allKingMoves(piece: Piece, board: Board): [number, number][] {
     [m - 1, n - 1], // up-left
   ];
 
-  const state = board.getBaordState();
+  const state = board.getBoardState();
 
   kingMoves.forEach(([x, y]) => {
     if (x < 0 || x >= Board.numRow || y < 0 || y >= Board.numCol) return;
@@ -31,7 +31,7 @@ export function allKingMoves(piece: Piece, board: Board): [number, number][] {
 
 export function isInCheck(color: "w" | "b", board: Board): boolean {
   const [kingX, kingY] = getKingPosition(board, color);
-  const state = board.getBaordState();
+  const state = board.getBoardState();
   const opponentColor = state[kingX][kingY].piece?.color === "w" ? "b" : "w";
   const opponentPieces = state.flatMap((row) =>
     row
@@ -52,7 +52,7 @@ export function isInCheck(color: "w" | "b", board: Board): boolean {
 const getKingPosition = (board: Board, color: "w" | "b"): [number, number] => {
   for (let i = 0; i < Board.numRow; i++) {
     for (let j = 0; j < Board.numCol; j++) {
-      const cell = board.getBaordState()[i][j];
+      const cell = board.getBoardState()[i][j];
       if (cell.piece && cell.piece.type === "k" && cell.piece.color === color) {
         return [i, j]; // Return the position of the king
       }
