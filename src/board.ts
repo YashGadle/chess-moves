@@ -19,7 +19,10 @@ export class Board {
             const piece = new Piece(cell, "b", [rowIndex, colIndex]);
             return new Cell(piece, (rowIndex + colIndex) % 2 === 0 ? "w" : "b");
           } else {
-            const piece = new Piece(cell.toLowerCase(), "w", [rowIndex, colIndex]);
+            const piece = new Piece(cell.toLowerCase(), "w", [
+              rowIndex,
+              colIndex,
+            ]);
             return new Cell(piece, (rowIndex + colIndex) % 2 === 0 ? "w" : "b");
           }
         })
@@ -134,7 +137,12 @@ export class Board {
     console.log(coordinatesToNotations(this.piece.getLegalMoves(board, true)));
   }
 
-  movePiece(from: Position, to: Position, piece: Piece) {
+  movePiece(
+    from: Position,
+    to: Position,
+    piece: Piece,
+    originalPiece: Piece | null = null
+  ) {
     const [fromRow, fromCol] = from;
     const [toRow, toCol] = to;
 
@@ -153,9 +161,11 @@ export class Board {
       return;
     }
 
+    const capturedPiece = this.state[toRow][toCol].piece;
     // Move the piece
     this.state[toRow][toCol].piece = piece;
-    this.state[fromRow][fromCol].piece = null;
+    this.state[fromRow][fromCol].piece = originalPiece;
+    return capturedPiece;
   }
 }
 

@@ -19,9 +19,9 @@ export default (
   const [m, n] = piece.position;
 
   return moves.filter(([x, y]) => {
-    board.movePiece([m, n], [x, y], piece); // Move the piece to the new position
+    const capturedPiece = board.movePiece([m, n], [x, y], piece); // Move the piece to the new position
     const isPinned = isInCheck(piece.color, board); // Check if the king is in check after the move
-    board.movePiece([x, y], [m, n], piece); // Move back to original position
+    board.movePiece([x, y], [m, n], piece, capturedPiece); // Move back to original position
     if (isPinned) {
       return false; // Skip moves that would leave the king in check
     }
